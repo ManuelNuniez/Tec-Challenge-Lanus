@@ -1,2 +1,2 @@
 # Tec-Challenge-Lanus
-Challenge Técnico para la pasnatía en Lanús, Desarrollado por Manuel Núñez
+Challenge Técnico para la pasantía en Lanús, Desarrollado por Manuel Núñez
