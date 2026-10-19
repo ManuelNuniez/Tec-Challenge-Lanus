@@ -38,8 +38,8 @@ model Card {
   holderName   String
   expMonth     Int
   expYear      Int
-  // Fixed balance loaded by the seed; the app does not create movements,
-  // so it is not recalculated from them.
+  // Set by the seed as the sum of the card's movements. The app does not
+  // create movements, so it never needs to change after that.
   balanceCents Int
   createdAt    DateTime   @default(now())
   user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)

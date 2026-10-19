@@ -31,21 +31,33 @@ const movements: SeedMovement[] = [
   { type: "CASH_OUT", counterparty: "Juan Pérez", description: "Cena del sábado", amountCents: 9500, daysAgo: 3, card: "mastercard" },
   { type: "CASH_IN", counterparty: "José Suárez", amountCents: 9500, daysAgo: 4, card: "visa" },
   { type: "CASH_OUT", counterparty: "Juan Rodríguez", description: "Fútbol 5", amountCents: 4500, daysAgo: 5, card: "mastercard" },
-  { type: "CASH_IN", counterparty: "Julio César", amountCents: 15000, daysAgo: 6, card: "mastercard" },
+  { type: "CASH_IN", counterparty: "Julio César", amountCents: 46384, daysAgo: 6, card: "mastercard" },
   { type: "CASH_OUT", counterparty: "Mariano Martínez", description: "Regalo de cumpleaños", amountCents: 7250, daysAgo: 8, card: "visa" },
   { type: "SUBSCRIPTION", counterparty: "Club Atlético Lanús", description: "Cuota social", amountCents: 35000, daysAgo: 9, card: "mastercard" },
-  { type: "CASH_IN", counterparty: "Juan Cabrera", amountCents: 20000, daysAgo: 10, card: "mastercard" },
+  { type: "CASH_IN", counterparty: "Juan Cabrera", amountCents: 50000, daysAgo: 10, card: "mastercard" },
   { type: "CASH_OUT", counterparty: "Jorge Álvarez", description: "Camiseta oficial", amountCents: 18999, daysAgo: 12, card: "visa" },
   { type: "SUBSCRIPTION", counterparty: "Spotify", description: "Premium Individual", amountCents: 3299, daysAgo: 13, card: "visa" },
   { type: "CASH_IN", counterparty: "Lucía Fernández", description: "Devolución", amountCents: 5000, daysAgo: 15, card: "mastercard" },
   { type: "SUBSCRIPTION", counterparty: "Netflix", description: "Plan Estándar", amountCents: 8999, daysAgo: 16, card: "mastercard" },
   { type: "CASH_OUT", counterparty: "Sofía Gómez", amountCents: 3000, daysAgo: 18, card: "mastercard" },
-  { type: "CASH_IN", counterparty: "Diego Romero", description: "Asado del domingo", amountCents: 6000, daysAgo: 20, card: "visa" },
+  { type: "CASH_IN", counterparty: "Diego Romero", description: "Asado del domingo", amountCents: 50000, daysAgo: 20, card: "visa" },
   { type: "SUBSCRIPTION", counterparty: "Google One", description: "100 GB", amountCents: 1999, daysAgo: 22, card: "visa" },
   { type: "CASH_OUT", counterparty: "María González", description: "Alquiler de cancha", amountCents: 12000, daysAgo: 25, card: "mastercard" },
-  { type: "CASH_IN", counterparty: "Carlos Benítez", amountCents: 25000, daysAgo: 27, card: "mastercard" },
+  { type: "CASH_IN", counterparty: "Carlos Benítez", amountCents: 85000, daysAgo: 27, card: "mastercard" },
   { type: "CASH_OUT", counterparty: "Valentina López", description: "Viaje a la cancha", amountCents: 2500, daysAgo: 30, card: "visa" },
 ];
+
+// Balance = what came in minus what went out, so it always matches the
+// movements. Mastercard adds up to the 978.85 shown in the Figma.
+function balanceFor(card: SeedMovement["card"]) {
+  return movements
+    .filter((movement) => movement.card === card)
+    .reduce(
+      (balance, { type, amountCents }) =>
+        type === "CASH_IN" ? balance + amountCents : balance - amountCents,
+      0,
+    );
+}
 
 function daysAgo(days: number) {
   const date = new Date();
@@ -75,7 +87,7 @@ async function main() {
       holderName: "Soy Granate",
       expMonth: 2,
       expYear: 2030,
-      balanceCents: 97885,
+      balanceCents: balanceFor("mastercard"),
     },
   });
 
@@ -87,7 +99,7 @@ async function main() {
       holderName: "Soy Granate",
       expMonth: 9,
       expYear: 2028,
-      balanceCents: 45210,
+      balanceCents: balanceFor("visa"),
     },
   });
 
