@@ -2,7 +2,7 @@
 
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -32,6 +32,21 @@ export function LoginForm() {
   const [fieldErrors, setFieldErrors] = useState<LoginFieldErrors>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Next keeps visited pages alive but hidden, so this form would come back
+  // after logout still saying "Ingresando…" and holding the password. Clear
+  // everything when the page is hidden.
+  useLayoutEffect(() => {
+    return () => {
+      setEmail("");
+      setPassword("");
+      setRemember(false);
+      setShowPassword(false);
+      setFieldErrors({});
+      setFormError(null);
+      setIsSubmitting(false);
+    };
+  }, []);
 
   function showFieldErrors(errors: LoginFieldErrors) {
     setFieldErrors(errors);
