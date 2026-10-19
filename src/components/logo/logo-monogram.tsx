@@ -1,12 +1,12 @@
 import type { SVGProps } from "react";
 import { cn } from "cn";
 
-type LogoProps = SVGProps<SVGSVGElement> & {
+export type LogoProps = SVGProps<SVGSVGElement> & {
   size?: number;
 };
 
 // GranaBank "G" on the rounded granate square from the Figma.
-export function Logo({ size = 56, className, ...props }: LogoProps) {
+export function LogoMonogram({ size = 56, className, ...props }: LogoProps) {
   return (
     <svg
       width={size}
