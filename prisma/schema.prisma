@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum CardIssuer {
+  MASTERCARD
+  VISA
+}
+
+enum MovementType {
+  SUBSCRIPTION
+  CASH_IN
+  CASH_OUT
+}
+
+model User {
+  id           String     @id @default(cuid())
+  email        String     @unique
+  passwordHash String
+  name         String
+  createdAt    DateTime   @default(now())
+  cards        Card[]
+  movements    Movement[]
+
+  @@map("users")
+}
+
+model Card {
+  id           String     @id @default(cuid())
+  userId       String
+  issuer       CardIssuer
+  lastFour     String     @db.Char(4)
+  holderName   String
+  expMonth     Int
+  expYear      Int
+  // Set by the seed as the sum of the card's movements. The app does not
+  // create movements, so it never needs to change after that.
+  balanceCents Int
+  createdAt    DateTime   @default(now())
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  movements    Movement[]
+
+  @@index([userId])
+  @@map("cards")
+}
+
+model Movement {
+  id           String       @id @default(cuid())
+  userId       String
+  cardId       String
+  type         MovementType
+  // Person or service on the other side: what the search matches against.
+  counterparty String
+  description  String?
+  // Always positive; the direction comes from the type.
+  amountCents  Int
+  occurredAt   DateTime
+  createdAt    DateTime     @default(now())
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  card         Card         @relation(fields: [cardId], references: [id], onDelete: Restrict)
+
+  @@index([userId, occurredAt])
+  @@index([cardId])
+  @@map("movements")
+}
