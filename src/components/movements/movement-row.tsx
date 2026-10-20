@@ -58,7 +58,7 @@ export function MovementRow({ movement }: { movement: MovementRowData }) {
       </span>
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-medium">{movement.counterparty}</p>
-        <p className="text-xs text-muted-foreground">{label}</p>
+        <p className="truncate text-xs text-muted-foreground">{label}</p>
       </div>
       {/* Unlike the Figma, the amount says whether money came in or went out.
           The sign carries it; only money in gets a color, so the list stays

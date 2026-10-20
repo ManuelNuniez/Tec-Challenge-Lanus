@@ -23,9 +23,11 @@ type SeedMovement = {
   card: "mastercard" | "visa";
 };
 
-// Most recent first. The first four match the Home in the Figma.
+// Most recent first. The first four match the Home in the Figma. The
+// 1.000.000 one is there on purpose, to check that long amounts and names fit.
 const movements: SeedMovement[] = [
   { type: "SUBSCRIPTION", counterparty: "Adobe", description: "Creative Cloud", amountCents: 12500, daysAgo: 0, card: "mastercard" },
+  { type: "CASH_IN", counterparty: "Concesionaria Granate S.A.", description: "Venta del auto", amountCents: 100000000, daysAgo: 1, card: "visa" },
   { type: "CASH_IN", counterparty: "Ronaldo", description: "Entradas para el partido", amountCents: 9500, daysAgo: 1, card: "mastercard" },
   { type: "SUBSCRIPTION", counterparty: "Figma", description: "Plan Professional", amountCents: 12500, daysAgo: 2, card: "mastercard" },
   { type: "CASH_OUT", counterparty: "Juan Pérez", description: "Cena del sábado", amountCents: 9500, daysAgo: 3, card: "mastercard" },
