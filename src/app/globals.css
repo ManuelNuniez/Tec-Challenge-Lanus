@@ -44,6 +44,8 @@
   --color-movement-cash-in-soft: var(--movement-cash-in-soft);
   --color-movement-cash-out: var(--movement-cash-out);
   --color-movement-cash-out-soft: var(--movement-cash-out-soft);
+  --color-amount-income: var(--amount-income);
+  --color-amount-expense: var(--amount-expense);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -86,14 +88,18 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
-  /* Movement types from the Figma. The violet and orange are a shade darker
-     than the Figma's so the amounts keep a 4.5:1 contrast on white. */
+  /* Movement type icons from the Figma. The violet and orange are a shade
+     darker than the Figma's so they keep a 4.5:1 contrast on white. */
   --movement-subscription: #9b3fd6;
   --movement-subscription-soft: #f3e8fd;
   --movement-cash-in: #7b1e2e;
   --movement-cash-in-soft: #f4e3e6;
   --movement-cash-out: #b9580c;
   --movement-cash-out-soft: #fdecd9;
+  /* Amounts go by direction, not type: green for money in, red for money
+     out. A brighter red than the brand granate so the two don't mix up. */
+  --amount-income: #15803d;
+  --amount-expense: #dc2626;
 }
 
 .dark {

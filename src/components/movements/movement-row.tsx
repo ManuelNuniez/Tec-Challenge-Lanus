@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowDownUp, ArrowUp } from "lucide-react";
+import { ArrowDown, ArrowUp, Repeat } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "cn";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -9,28 +9,30 @@ type MovementTypeStyle = {
   label: string;
   icon: LucideIcon;
   iconClassName: string;
-  amountClassName: string;
+  isIncome: boolean;
 };
 
-// Labels, icons and colors per type, as in the Figma components.
+// Labels and icon colors per type, as in the Figma components. Subscriptions
+// use a repeat icon instead of the Figma's two arrows, which read as a
+// transfer rather than a recurring charge.
 export const MOVEMENT_TYPES: Record<MovementType, MovementTypeStyle> = {
   SUBSCRIPTION: {
     label: "Pago de suscripción",
-    icon: ArrowDownUp,
+    icon: Repeat,
     iconClassName: "bg-movement-subscription-soft text-movement-subscription",
-    amountClassName: "text-movement-subscription",
+    isIncome: false,
   },
   CASH_IN: {
     label: "Pago recibido",
     icon: ArrowDown,
     iconClassName: "bg-movement-cash-in-soft text-movement-cash-in",
-    amountClassName: "text-movement-cash-in",
+    isIncome: true,
   },
   CASH_OUT: {
     label: "Pago enviado",
     icon: ArrowUp,
     iconClassName: "bg-movement-cash-out-soft text-movement-cash-out",
-    amountClassName: "text-movement-cash-out",
+    isIncome: false,
   },
 };
 
@@ -43,7 +45,7 @@ type MovementRowProps = {
 };
 
 export function MovementRow({ movement }: MovementRowProps) {
-  const { label, icon: Icon, iconClassName, amountClassName } =
+  const { label, icon: Icon, iconClassName, isIncome } =
     MOVEMENT_TYPES[movement.type];
 
   return (
@@ -60,7 +62,16 @@ export function MovementRow({ movement }: MovementRowProps) {
         <p className="truncate text-sm font-medium">{movement.counterparty}</p>
         <p className="text-xs text-muted-foreground">{label}</p>
       </div>
-      <p className={cn("shrink-0 text-sm font-medium", amountClassName)}>
+      {/* Unlike the Figma, the amount says whether money came in or went out:
+          the sign carries it and the color backs it up. The minus is the real
+          minus sign (U+2212), as wide as the plus. */}
+      <p
+        className={cn(
+          "shrink-0 text-sm font-medium",
+          isIncome ? "text-amount-income" : "text-amount-expense",
+        )}
+      >
+        {isIncome ? "+" : "\u2212"}
         {formatAmount(movement.amountCents)}
       </p>
     </div>
