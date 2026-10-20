@@ -87,14 +87,16 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
-  /* Movement type icons from the Figma. The violet and orange are a shade
-     darker than the Figma's so they keep a 4.5:1 contrast on white. */
+  /* Movement type icons, with the Figma's colors. Received and sent swap
+     colors: the reddish granate goes to money out, so it doesn't contradict
+     the green of money in. The violet and orange are a shade darker than the
+     Figma's so they keep a 4.5:1 contrast on white. */
   --movement-subscription: #9b3fd6;
   --movement-subscription-soft: #f3e8fd;
-  --movement-cash-in: #7b1e2e;
-  --movement-cash-in-soft: #f4e3e6;
-  --movement-cash-out: #b9580c;
-  --movement-cash-out-soft: #fdecd9;
+  --movement-cash-in: #b9580c;
+  --movement-cash-in-soft: #fdecd9;
+  --movement-cash-out: #7b1e2e;
+  --movement-cash-out-soft: #f4e3e6;
   /* Money in is the only amount with a color; money out stays neutral. A deep
      green that sits well next to the granate. */
   --amount-income: #1f7a4d;
