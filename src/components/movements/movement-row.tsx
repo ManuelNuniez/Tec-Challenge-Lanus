@@ -36,15 +36,13 @@ export const MOVEMENT_TYPES: Record<MovementType, MovementTypeStyle> = {
   },
 };
 
-type MovementRowProps = {
-  movement: {
-    type: MovementType;
-    counterparty: string;
-    amountCents: number;
-  };
+export type MovementRowData = {
+  type: MovementType;
+  counterparty: string;
+  amountCents: number;
 };
 
-export function MovementRow({ movement }: MovementRowProps) {
+export function MovementRow({ movement }: { movement: MovementRowData }) {
   const { label, icon: Icon, iconClassName, isIncome } =
     MOVEMENT_TYPES[movement.type];
 

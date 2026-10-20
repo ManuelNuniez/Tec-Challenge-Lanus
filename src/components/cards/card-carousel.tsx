@@ -1,18 +1,37 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import type { CarouselApi } from "@/components/ui/carousel";
 import { Skeleton } from "@/components/ui/skeleton";
 import { BankCard } from "./bank-card";
 import type { BankCardData } from "./bank-card";
 import { ISSUER_NAMES } from "./issuer-logo";
 
+type CardCarouselProps = {
+  cards: BankCardData[];
+  onSelectedChange?: (index: number) => void;
+};
+
 // Bleeds to the screen edges so the next card peeks out, as in the Figma.
 // Without containScroll every card stops where the first one sits, instead of
 // the last one sticking to the right edge. The carousel takes keyboard focus
 // so the arrow keys can move it.
-export function CardCarousel({ cards }: { cards: BankCardData[] }) {
+export function CardCarousel({ cards, onSelectedChange }: CardCarouselProps) {
+  const [api, setApi] = useState<CarouselApi>();
+
+  useEffect(() => {
+    if (!api || !onSelectedChange) return;
+    const handleSelect = () => onSelectedChange(api.selectedScrollSnap());
+    api.on("select", handleSelect);
+    return () => {
+      api.off("select", handleSelect);
+    };
+  }, [api, onSelectedChange]);
+
   return (
     <Carousel
+      setApi={setApi}
       opts={{ align: "start", containScroll: false }}
       tabIndex={0}
       aria-label="Tus tarjetas"
@@ -22,7 +41,7 @@ export function CardCarousel({ cards }: { cards: BankCardData[] }) {
         {cards.map((card) => (
           <CarouselItem
             key={card.id}
-            aria-label={`${ISSUER_NAMES[card.issuer]} terminada en ${card.lastFour}`}
+            aria-label={cardName(card)}
             className="basis-[88%] pl-4"
           >
             <BankCard card={card} />
@@ -31,6 +50,10 @@ export function CardCarousel({ cards }: { cards: BankCardData[] }) {
       </CarouselContent>
     </Carousel>
   );
+}
+
+export function cardName(card: Pick<BankCardData, "issuer" | "lastFour">) {
+  return `${ISSUER_NAMES[card.issuer]} terminada en ${card.lastFour}`;
 }
 
 // Darker than the default skeleton so it shows on the page background.

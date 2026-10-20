@@ -23,7 +23,9 @@ export const getCurrentUser = cache(async () => {
   return user;
 });
 
-export async function getCards() {
+// Each card with its latest movements, so the Home can switch between cards
+// without asking for more data.
+export async function getCardsWithLatestMovements(limit: number) {
   const user = await getCurrentUser();
   return prisma.card.findMany({
     where: { userId: user.id },
@@ -36,16 +38,11 @@ export async function getCards() {
       expMonth: true,
       expYear: true,
       balanceCents: true,
+      movements: {
+        orderBy: { occurredAt: "desc" },
+        take: limit,
+        select: { id: true, type: true, counterparty: true, amountCents: true },
+      },
     },
-  });
-}
-
-export async function getLatestMovements(limit = 5) {
-  const user = await getCurrentUser();
-  return prisma.movement.findMany({
-    where: { userId: user.id },
-    orderBy: { occurredAt: "desc" },
-    take: limit,
-    select: { id: true, type: true, counterparty: true, amountCents: true },
   });
 }
