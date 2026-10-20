@@ -1,6 +1,9 @@
 import "server-only";
 import { redirect } from "next/navigation";
 import { cache } from "react";
+import { Prisma } from "@/generated/prisma/client";
+import type { MovementType } from "@/generated/prisma/enums";
+import type { MovementFilters } from "@/lib/movement-filters";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
 
@@ -45,4 +48,37 @@ export async function getCardsWithLatestMovements(limit: number) {
       },
     },
   });
+}
+
+type MovementListItem = {
+  id: string;
+  type: MovementType;
+  counterparty: string;
+  amountCents: number;
+};
+
+// Every movement of the user, newest first, narrowed by the Movimientos search
+// and filter. Written in SQL because Prisma's filters can't ignore accents:
+// unaccent() lets "jose" find "José". Values still go in as parameters.
+export async function getMovements({ q, type }: MovementFilters) {
+  const user = await getCurrentUser();
+
+  const conditions = [Prisma.sql`"userId" = ${user.id}`];
+  if (type) {
+    conditions.push(Prisma.sql`"type" = ${type}::"MovementType"`);
+  }
+  if (q) {
+    // %, _ and \ are special in LIKE; escape them so they match themselves.
+    const pattern = `%${q.replace(/[\\%_]/g, "\\$&")}%`;
+    conditions.push(
+      Prisma.sql`unaccent("counterparty") ILIKE unaccent(${pattern})`,
+    );
+  }
+
+  return prisma.$queryRaw<MovementListItem[]>`
+    SELECT "id", "type", "counterparty", "amountCents"
+    FROM "movements"
+    WHERE ${Prisma.join(conditions, " AND ")}
+    ORDER BY "occurredAt" DESC
+  `;
 }
