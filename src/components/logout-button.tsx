@@ -1,15 +1,15 @@
 "use client";
 
+import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useLayoutEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 
-export function LogoutButton() {
+export function LogoutButton({ className }: { className?: string }) {
   const router = useRouter();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   // The page stays alive but hidden after logout; reset so the button is not
-  // stuck on "Saliendo…" on the next login.
+  // stuck disabled on the next login.
   useLayoutEffect(() => {
     return () => setIsLoggingOut(false);
   }, []);
@@ -22,8 +22,14 @@ export function LogoutButton() {
   }
 
   return (
-    <Button variant="outline" onClick={handleLogout} disabled={isLoggingOut}>
-      {isLoggingOut ? "Saliendo…" : "Salir"}
-    </Button>
+    <button
+      type="button"
+      onClick={handleLogout}
+      disabled={isLoggingOut}
+      aria-label={isLoggingOut ? "Cerrando sesión" : "Cerrar sesión"}
+      className={className}
+    >
+      <LogOut className="size-6" aria-hidden />
+    </button>
   );
 }
