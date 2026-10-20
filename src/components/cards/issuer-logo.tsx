@@ -6,11 +6,13 @@ export const ISSUER_NAMES: Record<CardIssuer, string> = {
 };
 
 // Simplified issuer marks, drawn here so the app ships no third-party images.
+// They keep their size when a long balance fills the card's top row.
 export function IssuerLogo({ issuer }: { issuer: CardIssuer }) {
   if (issuer === "MASTERCARD") {
     return (
       <svg
         width="32"
+        className="shrink-0"
         height="20"
         viewBox="0 0 32 20"
         role="img"
@@ -26,6 +28,7 @@ export function IssuerLogo({ issuer }: { issuer: CardIssuer }) {
   return (
     <svg
       width="40"
+      className="shrink-0"
       height="20"
       viewBox="0 0 40 20"
       role="img"
