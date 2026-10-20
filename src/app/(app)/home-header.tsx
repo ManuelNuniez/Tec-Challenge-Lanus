@@ -14,8 +14,9 @@ export function HomeHeader() {
         <Greeting />
       </Suspense>
       <div className="-mr-2 flex items-center">
+        {/* #search puts the cursor in the search box on arrival. */}
         <Link
-          href="/movements"
+          href="/movements#search"
           aria-label="Buscar movimientos"
           className={iconLinkClassName}
         >
