@@ -45,7 +45,6 @@
   --color-movement-cash-out: var(--movement-cash-out);
   --color-movement-cash-out-soft: var(--movement-cash-out-soft);
   --color-amount-income: var(--amount-income);
-  --color-amount-expense: var(--amount-expense);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -96,10 +95,9 @@
   --movement-cash-in-soft: #f4e3e6;
   --movement-cash-out: #b9580c;
   --movement-cash-out-soft: #fdecd9;
-  /* Amounts go by direction, not type: green for money in, red for money
-     out. A brighter red than the brand granate so the two don't mix up. */
-  --amount-income: #15803d;
-  --amount-expense: #dc2626;
+  /* Money in is the only amount with a color; money out stays neutral. A deep
+     green that sits well next to the granate. */
+  --amount-income: #1f7a4d;
 }
 
 .dark {

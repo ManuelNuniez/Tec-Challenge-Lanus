@@ -60,13 +60,14 @@ export function MovementRow({ movement }: { movement: MovementRowData }) {
         <p className="truncate text-sm font-medium">{movement.counterparty}</p>
         <p className="text-xs text-muted-foreground">{label}</p>
       </div>
-      {/* Unlike the Figma, the amount says whether money came in or went out:
-          the sign carries it and the color backs it up. The minus is the real
-          minus sign (U+2212), as wide as the plus. */}
+      {/* Unlike the Figma, the amount says whether money came in or went out.
+          The sign carries it; only money in gets a color, so the list stays
+          calm and red is kept for errors. The minus is the real minus sign
+          (U+2212), as wide as the plus. */}
       <p
         className={cn(
           "shrink-0 text-sm font-medium",
-          isIncome ? "text-amount-income" : "text-amount-expense",
+          isIncome ? "text-amount-income" : "text-foreground",
         )}
       >
         {isIncome ? "+" : "\u2212"}
