@@ -15,7 +15,7 @@ import {
 import type { MovementRowData } from "@/components/movements/movement-row";
 
 export type CardWithMovements = BankCardData & {
-  movements: (MovementRowData & { id: string })[];
+  movements: MovementRowData[];
 };
 
 // The latest movements follow the card in view. Every card arrives with its

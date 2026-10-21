@@ -2,7 +2,7 @@ import "server-only";
 import { redirect } from "next/navigation";
 import { cache } from "react";
 import { Prisma } from "@/generated/prisma/client";
-import type { MovementType } from "@/generated/prisma/enums";
+import type { MovementStatus, MovementType } from "@/generated/prisma/enums";
 import type { MovementFilters } from "@/lib/movement-filters";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
@@ -44,7 +44,13 @@ export async function getCardsWithLatestMovements(limit: number) {
       movements: {
         orderBy: { occurredAt: "desc" },
         take: limit,
-        select: { id: true, type: true, counterparty: true, amountCents: true },
+        select: {
+          id: true,
+          type: true,
+          status: true,
+          counterparty: true,
+          amountCents: true,
+        },
       },
     },
   });
@@ -53,6 +59,7 @@ export async function getCardsWithLatestMovements(limit: number) {
 type MovementListItem = {
   id: string;
   type: MovementType;
+  status: MovementStatus;
   counterparty: string;
   amountCents: number;
 };
@@ -76,9 +83,32 @@ export async function getMovements({ q, type }: MovementFilters) {
   }
 
   return prisma.$queryRaw<MovementListItem[]>`
-    SELECT "id", "type", "counterparty", "amountCents"
+    SELECT "id", "type", "status", "counterparty", "amountCents"
     FROM "movements"
     WHERE ${Prisma.join(conditions, " AND ")}
     ORDER BY "occurredAt" DESC
   `;
+}
+
+// One movement with everything its detail screen shows. Looked up together
+// with the user, so someone else's movement is as missing as one that
+// doesn't exist.
+export async function getMovement(id: string) {
+  const user = await getCurrentUser();
+  return prisma.movement.findFirst({
+    where: { id, userId: user.id },
+    select: {
+      id: true,
+      operationNumber: true,
+      type: true,
+      operationType: true,
+      status: true,
+      counterparty: true,
+      taxId: true,
+      description: true,
+      amountCents: true,
+      occurredAt: true,
+      card: { select: { issuer: true, lastFour: true } },
+    },
+  });
 }
