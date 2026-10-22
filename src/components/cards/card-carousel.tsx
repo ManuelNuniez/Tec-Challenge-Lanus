@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import type { CarouselApi } from "@/components/ui/carousel";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -19,20 +19,33 @@ type CardCarouselProps = {
 // so the arrow keys can move it.
 export function CardCarousel({ cards, onSelectedChange }: CardCarouselProps) {
   const [api, setApi] = useState<CarouselApi>();
+  // Next keeps the Home alive but hidden, and the carousel is built again when
+  // it comes back (from a movement's detail, say). It starts on the card that
+  // was in view, so the latest movements below still match it.
+  const selectedIndexRef = useRef(0);
+  const [startIndex, setStartIndex] = useState(0);
 
   useEffect(() => {
-    if (!api || !onSelectedChange) return;
-    const handleSelect = () => onSelectedChange(api.selectedScrollSnap());
+    if (!api) return;
+    const handleSelect = () => {
+      selectedIndexRef.current = api.selectedScrollSnap();
+      onSelectedChange?.(selectedIndexRef.current);
+    };
     api.on("select", handleSelect);
     return () => {
       api.off("select", handleSelect);
     };
   }, [api, onSelectedChange]);
 
+  useLayoutEffect(() => {
+    const selectedIndex = selectedIndexRef;
+    return () => setStartIndex(selectedIndex.current);
+  }, []);
+
   return (
     <Carousel
       setApi={setApi}
-      opts={{ align: "start", containScroll: false }}
+      opts={{ align: "start", containScroll: false, startIndex }}
       tabIndex={0}
       aria-label="Tus tarjetas"
       className="-mx-6 rounded-3xl outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
