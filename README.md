@@ -25,20 +25,23 @@ Requisitos: **Node.js 20.19+** y **PostgreSQL** con la extensión `unaccent` (in
 - **Stack:** Next.js 16 con API routes como backend (un solo proyecto y un solo deploy), TypeScript, PostgreSQL en Neon, Prisma, Tailwind + shadcn/ui y zod. Deploy en Vercel con cada merge a `main`.
 - **Login propio:** contraseña hasheada con bcrypt y sesión en una cookie `httpOnly` firmada. "Recordarme" la mantiene 30 días; sin tildar, se cierra con el navegador.
 - **Las pantallas leen la base en el servidor**, a través de una capa de acceso que siempre filtra por el usuario logueado.
-- **Montos en centavos enteros**, para evitar errores de redondeo.
+- Los montos se guardan **en centavos enteros**, para evitar errores de redondeo.
 - **El saldo cuenta solo los movimientos completados:** lo pendiente todavía no se procesó y lo rechazado nunca salió.
-- **Búsqueda sin tildes** ("jose" encuentra "José") con la extensión `unaccent` de Postgres. Búsqueda y filtro viven en la URL, así sobreviven a recargar.
+- Con la extensión `unaccent` de Postgres se puede hacer una **búsqueda sin tildes** ("jose" encuentra "José"). Búsqueda y filtro viven en la URL, así sobreviven a recargar.
 - **Las reglas de los datos se validan también en la base**, con restricciones `CHECK`, no solo en el código.
 - **El usuario nunca ve un código de error:** la API responde con un código estable y la pantalla elige un mensaje que diga qué hacer.
 - **Detalle del movimiento:** no estaba en el Figma; se diseñó con su mismo lenguaje visual.
 - **Estados del movimiento** (completado, pendiente, rechazado): en las listas solo se marcan los dos últimos, para que las filas completadas queden como en el Figma.
+- **Cambios respecto al Figma en los movimientos**: con el objetivo de que el usuario de una sola mirada pueda detectar si la plata entra o sale, opté por hacer 3 cambios que difieren de las pantallas de ejemplo:
+	- El color del ícono de egreso se cambió con el de ingreso. El color granate que es casi rojo se suele asociar a un egreso de dinero.
+	- La suscripción usa el ícono de repetir en vez de 2 flechas que pueden confundirse fácilmente con una transferencia.
+	- Montos con "+" y "−" según la dirección; solo los ingresos quedan en color verde.
 
 ## Qué mejoraría con más tiempo
 
-- Crear movimientos desde la API, actualizando el saldo en la misma transacción.
+- Crear movimientos desde la API, actualizando el saldo en la misma transacción. Probaría los endpoints con Postman o Insomnia antes de armar el front.
 - Notificaciones reales (hoy la pantalla está siempre vacía).
-- Comprobante del movimiento para compartir o descargar.
+- La opción de crear el comprobante del movimiento para compartir o descargar.
 - Motivo del rechazo en el detalle.
-- Color por tarjeta en vez de por marca.
-- Volver a la pantalla pedida después del login.
+- Hoy el color de la tarjeta depende de la marca: dos tarjetas Visa se verían iguales. Lo ideal es guardar el color de cada tarjeta en la base.
 - Tests de la lógica de datos y de los flujos principales.
