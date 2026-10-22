@@ -6,7 +6,7 @@ import {
   MOVEMENT_TYPES,
 } from "@/components/movements/movement-row";
 import { Skeleton } from "@/components/ui/skeleton";
-import type { MovementStatus, OperationType } from "@/generated/prisma/enums";
+import type { OperationType } from "@/generated/prisma/enums";
 import type { getMovement } from "@/lib/dal";
 import {
   formatAmount,
@@ -23,33 +23,15 @@ const OPERATION_TYPES: Record<OperationType, string> = {
   CARD_PAYMENT: "Pago con tarjeta física",
 };
 
-// A line under the status when the movement didn't simply go through, saying
-// what it means for the balance.
-function statusNote({
-  status,
-  isIncome,
-}: {
-  status: MovementStatus;
-  isIncome: boolean;
-}) {
-  if (status === "PENDING") {
-    return "Todavía se está procesando y no impactó en tu saldo.";
-  }
-  if (status === "REJECTED") {
-    return isIncome
-      ? "No se sumó nada a tu saldo."
-      : "No se descontó nada de tu saldo.";
-  }
-  return null;
-}
-
 export function MovementDetail({ movement }: { movement: MovementDetailData }) {
   const { label, icon: Icon, iconClassName, isIncome } =
     MOVEMENT_TYPES[movement.type];
   const status = MOVEMENT_STATUSES[movement.status];
   const StatusIcon = status.icon;
   const isRejected = movement.status === "REJECTED";
-  const note = statusNote({ status: movement.status, isIncome });
+  // A pending movement gets a short line under the status; a rejected one
+  // speaks for itself.
+  const isPending = movement.status === "PENDING";
   // The card shows only where money left: what it paid with, or where a
   // transfer was sent from. Money in has no card to show.
   const cardLabel = isIncome
@@ -97,7 +79,11 @@ export function MovementDetail({ movement }: { movement: MovementDetailData }) {
           <StatusIcon className="size-4" aria-hidden />
           {status.label}
         </p>
-        {note && <p className="mt-2 text-sm text-muted-foreground">{note}</p>}
+        {isPending && (
+          <p className="mt-2 text-sm text-muted-foreground">
+            La operación se está procesando.
+          </p>
+        )}
       </div>
 
       <dl className="mt-8 divide-y rounded-2xl bg-card px-4 shadow-xs">
