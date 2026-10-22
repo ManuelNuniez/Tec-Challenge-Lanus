@@ -4,6 +4,7 @@ import { IssuerLogo } from "@/components/cards/issuer-logo";
 import {
   MOVEMENT_STATUSES,
   MOVEMENT_TYPES,
+  movementIcon,
 } from "@/components/movements/movement-row";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { OperationType } from "@/generated/prisma/enums";
@@ -24,8 +25,8 @@ const OPERATION_TYPES: Record<OperationType, string> = {
 };
 
 export function MovementDetail({ movement }: { movement: MovementDetailData }) {
-  const { label, icon: Icon, iconClassName, isIncome } =
-    MOVEMENT_TYPES[movement.type];
+  const { label, isIncome } = MOVEMENT_TYPES[movement.type];
+  const { icon: Icon, className: iconClassName } = movementIcon(movement);
   const status = MOVEMENT_STATUSES[movement.status];
   const StatusIcon = status.icon;
   const isRejected = movement.status === "REJECTED";
