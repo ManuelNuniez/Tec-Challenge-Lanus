@@ -37,9 +37,8 @@ export function MovementDetail({ movement }: { movement: MovementDetailData }) {
   // transfer was sent from. Money in has no card to show.
   const cardLabel = isIncome
     ? null
-    : movement.operationType === "TRANSFER"
-      ? "Enviado desde"
-      : "Pagado con";
+    : (status.cardLabel ??
+      (movement.operationType === "TRANSFER" ? "Enviado desde" : "Pagado con"));
 
   return (
     <>

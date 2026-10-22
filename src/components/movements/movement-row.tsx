@@ -50,6 +50,9 @@ type MovementStatusStyle = {
   icon: LucideIcon;
   // Replaces the type icon when the movement didn't go through; null keeps it.
   tileIcon: LucideIcon | null;
+  // Label of the card row in the detail. Until the money moves it can't say
+  // "paid with" or "sent from"; null leaves it to the operation.
+  cardLabel: string | null;
   textClassName: string;
   badgeClassName: string;
 };
@@ -59,6 +62,7 @@ export const MOVEMENT_STATUSES: Record<MovementStatus, MovementStatusStyle> = {
     label: "Completado",
     icon: CircleCheck,
     tileIcon: null,
+    cardLabel: null,
     textClassName: "text-status-completed",
     badgeClassName: "bg-status-completed-soft text-status-completed",
   },
@@ -66,6 +70,7 @@ export const MOVEMENT_STATUSES: Record<MovementStatus, MovementStatusStyle> = {
     label: "Pendiente",
     icon: Hourglass,
     tileIcon: Hourglass,
+    cardLabel: "Tarjeta",
     textClassName: "text-status-pending",
     badgeClassName: "bg-status-pending-soft text-status-pending",
   },
@@ -73,6 +78,7 @@ export const MOVEMENT_STATUSES: Record<MovementStatus, MovementStatusStyle> = {
     label: "Rechazado",
     icon: CircleX,
     tileIcon: X,
+    cardLabel: "Tarjeta",
     textClassName: "text-status-rejected",
     badgeClassName: "bg-status-rejected-soft text-status-rejected",
   },
