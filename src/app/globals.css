@@ -45,6 +45,12 @@
   --color-movement-cash-out: var(--movement-cash-out);
   --color-movement-cash-out-soft: var(--movement-cash-out-soft);
   --color-amount-income: var(--amount-income);
+  --color-status-completed: var(--status-completed);
+  --color-status-completed-soft: var(--status-completed-soft);
+  --color-status-pending: var(--status-pending);
+  --color-status-pending-soft: var(--status-pending-soft);
+  --color-status-rejected: var(--status-rejected);
+  --color-status-rejected-soft: var(--status-rejected-soft);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -100,6 +106,15 @@
   /* Money in is the only amount with a color; money out stays neutral. A deep
      green that sits well next to the granate. */
   --amount-income: #1f7a4d;
+  /* Movement status: the same green as money in for what went through, amber
+     for what is still on its way, red for what was rejected. All keep 4.5:1
+     on white and on their soft background. */
+  --status-completed: #1f7a4d;
+  --status-completed-soft: #e3f2ea;
+  --status-pending: #8f5a00;
+  --status-pending-soft: #fcf0d6;
+  --status-rejected: #c01b2e;
+  --status-rejected-soft: #fbe6e8;
 }
 
 .dark {

@@ -18,6 +18,20 @@ enum MovementType {
   CASH_OUT
 }
 
+// How the money moved. Subscriptions are always SUBSCRIPTION and money in is
+// always a TRANSFER; only money out can be either a TRANSFER or a CARD_PAYMENT.
+enum OperationType {
+  TRANSFER
+  SUBSCRIPTION
+  CARD_PAYMENT
+}
+
+enum MovementStatus {
+  COMPLETED
+  PENDING
+  REJECTED
+}
+
 model User {
   id           String     @id @default(cuid())
   email        String     @unique
@@ -38,7 +52,7 @@ model Card {
   holderName   String
   expMonth     Int
   expYear      Int
-  // Set by the seed as the sum of the card's movements. The app does not
+  // Set by the seed as the sum of the card's completed movements. The app does not
   // create movements, so it never needs to change after that.
   balanceCents Int
   createdAt    DateTime   @default(now())
@@ -50,19 +64,27 @@ model Card {
 }
 
 model Movement {
-  id           String       @id @default(cuid())
-  userId       String
-  cardId       String
-  type         MovementType
+  id              String         @id @default(cuid())
+  // The number the user sees on the receipt. Nine digits, given in order by
+  // the database (it starts at 100000001); the id stays internal.
+  operationNumber Int            @unique @default(autoincrement())
+  userId          String
+  cardId          String
+  type            MovementType
+  operationType   OperationType
+  status          MovementStatus
   // Person or service on the other side: what the search matches against.
-  counterparty String
-  description  String?
+  counterparty    String
+  // CUIT/CUIL of the other side, 11 digits without dashes. Only transfers
+  // have one; the migration checks both rules.
+  taxId           String?        @db.Char(11)
+  description     String?
   // Always positive; the direction comes from the type.
-  amountCents  Int
-  occurredAt   DateTime
-  createdAt    DateTime     @default(now())
-  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  card         Card         @relation(fields: [cardId], references: [id], onDelete: Restrict)
+  amountCents     Int
+  occurredAt      DateTime
+  createdAt       DateTime       @default(now())
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  card            Card           @relation(fields: [cardId], references: [id], onDelete: Restrict)
 
   @@index([userId, occurredAt])
   @@index([cardId])

@@ -26,7 +26,7 @@ const SEARCH_DELAY_MS = 300;
 
 type MovementsBrowserProps = {
   filters: MovementFilters;
-  movements: (MovementRowData & { id: string })[];
+  movements: MovementRowData[];
 };
 
 // Search and filter live in the URL and the server answers with the list.

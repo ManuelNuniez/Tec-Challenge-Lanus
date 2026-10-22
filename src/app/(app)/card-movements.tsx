@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useLayoutEffect, useState } from "react";
+import { useState } from "react";
 import type { BankCardData } from "@/components/cards/bank-card";
 import {
   CardCarousel,
@@ -15,7 +15,7 @@ import {
 import type { MovementRowData } from "@/components/movements/movement-row";
 
 export type CardWithMovements = BankCardData & {
-  movements: (MovementRowData & { id: string })[];
+  movements: MovementRowData[];
 };
 
 // The latest movements follow the card in view. Every card arrives with its
@@ -24,12 +24,6 @@ export function CardMovements({ cards }: { cards: CardWithMovements[] }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const selectedCard = cards[selectedIndex];
   const movements = selectedCard?.movements ?? [];
-
-  // Next keeps the Home alive but hidden, and the carousel starts over on the
-  // first card when it comes back. Reset so the list matches it.
-  useLayoutEffect(() => {
-    return () => setSelectedIndex(0);
-  }, []);
 
   return (
     <>
